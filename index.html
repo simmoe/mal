@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -8,7 +9,90 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel='stylesheet' href='./css/index.css'>
 </head>
+
 <body>
-    
+    <main>
+        <section>
+
+        </section>
+        <section>
+
+        </section>
+        <section>
+
+        </section>
+        <section>
+
+        </section>
+        <section>
+
+        </section>
+    </main>
+    <div id="info"></div>
+
+    <script>
+        //set relevant y positions for section elements
+        document.querySelectorAll("section").forEach((e, i) => {
+            pos = i * 100
+            console.log(pos)
+            e.style.transform = `translateY(${pos}vh)`
+        })
+
+        function slideSections(slide) {
+            document.querySelectorAll("section").forEach((e, key) => {
+                if (slide == key) {
+                    e.style.transform = "translateY(0)"
+                } else if (key < slide) {
+                    e.style.transform = "translateY(-100vh)"
+                } else if (key > slide) {
+                    e.style.transform = "translateY(100vh)"
+                }
+            })
+        }
+
+
+        //keep count of slides
+        let slides = 0
+        let slidesLength = document.querySelectorAll("section").length - 1
+        let info = document.querySelector("#info")
+
+
+        //we start by assuming theres been no wheel events yet
+        let ended = true
+        //should we wait?
+        let countABit = 1;
+
+        window.addEventListener('wheel', (e) => {
+            //if ended is true, this is a new wheel event - this is also the case the first time
+            if (ended) {
+                ended = false
+                if (e.deltaY > 0) {
+                    slides++
+                } else {
+                    slides--
+                }
+                if (slides < 0) {
+                    slides = 0;
+                    return
+                }
+                if (slides > slidesLength) {
+                    slides = slidesLength;
+                    return
+                }
+
+                slideSections(slides)
+            }
+
+            //if deltaY is small, we assume the wheel event is about to end
+            if (Math.abs(e.deltaY) <= 1) {
+                countABit++
+                if (countABit >= 11) {
+                    ended = true
+                    countABit = 0
+                }
+            }
+        })
+    </script>
 </body>
+
 </html>
